@@ -15,6 +15,8 @@ NAME = f"{dC.RATIO_TO_PREDICT}-TIK-{dC.SEQ_LEN}-SEQ-{dC.FUTURE_PERIOD_PREDICT}-P
 
 train_x, train_y, validation_x, validation_y = dC.sort_data()
 
+print(train_x.shape[1:])
+
 model = keras.models.Sequential(
         [
             keras.layers.LSTM(128, input_shape=(train_x.shape[1:]), return_sequences=True),

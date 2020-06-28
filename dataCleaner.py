@@ -28,10 +28,8 @@ def classify(current, future_values):
 
 def preprocess_df(df, validation=False):
     df = df.drop("future", 1)  # don't need this anymore.
-
-    # I think we shoudld maybe drop bidclose and time here
-    print ("DF:")
-    print(df)
+    df = df.drop("bidclose", 1)
+    df = df.drop("time", 1)
 
     for col in df.columns:  # go through all of the columns
         if col != "target":  # normalize all ... except for the target itself!
@@ -48,6 +46,8 @@ def preprocess_df(df, validation=False):
         prev_days.append([n for n in i[:-1]])  # store all but the target
         if len(prev_days) == SEQ_LEN:  # make sure we have 60 sequences!
             sequential_data.append([np.array(prev_days), i[-1]])  # append those bad boys!
+
+    print(sequential_data)
 
     if not validation:
         #only randomise non validation data
@@ -120,7 +120,6 @@ def sort_data():
     pd.set_option('display.width', None)
     pd.set_option('display.max_colwidth', None)
     pd.set_option('display.min_rows', 40)
-    print(df)
 
     # here, split away some slice of the future data from the main df.
     times = sorted(df.index.values)
@@ -129,8 +128,6 @@ def sort_data():
 
     validation_df = df[(df.index >= last_5pct)]
     df = df[(df.index < last_5pct)]
-
-    print(df)
 
     train_x, train_y = preprocess_df(df)
     validation_x, validation_y = preprocess_df(validation_df, True)
@@ -143,6 +140,8 @@ def sort_data():
     train_y = np.asarray(train_y)
     validation_x = np.asarray(validation_x)
     validation_y = np.asarray(validation_y)
+
+    print(train_x)
 
     return train_x, train_y, validation_x, validation_y
 
